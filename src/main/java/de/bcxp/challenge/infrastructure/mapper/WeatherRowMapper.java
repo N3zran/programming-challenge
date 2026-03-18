@@ -16,15 +16,21 @@ public class WeatherRowMapper implements RowMapper<WeatherRecord> {
 
     @Override
     public WeatherRecord map(String[] header, String[] row) {
-        int dayIndex = findColumnIndex(header, COLUMN_DAY);
-        int maxTempIndex = findColumnIndex(header, COLUMN_MAX_TEMP);
-        int minTempIndex = findColumnIndex(header, COLUMN_MIN_TEMP);
+        try {
+            int dayIndex = findColumnIndex(header, COLUMN_DAY);
+            int maxTempIndex = findColumnIndex(header, COLUMN_MAX_TEMP);
+            int minTempIndex = findColumnIndex(header, COLUMN_MIN_TEMP);
 
-        int day = Integer.parseInt(row[dayIndex].trim());
-        double maxTemp = Double.parseDouble(row[maxTempIndex].trim());
-        double minTemp = Double.parseDouble(row[minTempIndex].trim());
+            int day = Integer.parseInt(row[dayIndex].trim());
+            double maxTemp = Double.parseDouble(row[maxTempIndex].trim());
+            double minTemp = Double.parseDouble(row[minTempIndex].trim());
 
-        return new WeatherRecord(day, maxTemp, minTemp);
+            return new WeatherRecord(day, maxTemp, minTemp);
+        } catch (RowMappingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RowMappingException("Failed to map weather row", e);
+        }
     }
 
     private int findColumnIndex(String[] header, String columnName) {
@@ -33,6 +39,6 @@ public class WeatherRowMapper implements RowMapper<WeatherRecord> {
                 return i;
             }
         }
-        return -1;
+        throw new RowMappingException("Required column not found: " + columnName);
     }
 }

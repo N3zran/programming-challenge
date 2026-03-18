@@ -22,20 +22,24 @@ public final class App {
      *
      * @param args the CLI arguments passed
      */
-    public static void main(String... args) throws Exception {
+    public static void main(String... args) {
 
-        // --- Weather analysis ---
-        DataReader<WeatherRecord> weatherReader = new CsvFileReader<>(',', new WeatherRowMapper());
-        WeatherAnalysisService weatherService = new WeatherAnalysisService(weatherReader, new TemperatureSpreadCalculator());
+        try {
+            // --- Weather analysis ---
+            DataReader<WeatherRecord> weatherReader = new CsvFileReader<>(',', new WeatherRowMapper());
+            WeatherAnalysisService weatherService = new WeatherAnalysisService(weatherReader, new TemperatureSpreadCalculator());
 
-        String dayWithSmallestTempSpread = weatherService.findDayWithSmallestTemperatureSpread(WEATHER_CSV);
-        System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
+            String dayWithSmallestTempSpread = weatherService.findDayWithSmallestTemperatureSpread(WEATHER_CSV);
+            System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
 
-        // --- Country analysis ---
-        DataReader<CountryRecord> countryReader = new CsvFileReader<>(';', new CountryRowMapper());
-        CountryAnalysisService countryService = new CountryAnalysisService(countryReader, new PopulationDensityCalculator());
+            // --- Country analysis ---
+            DataReader<CountryRecord> countryReader = new CsvFileReader<>(';', new CountryRowMapper());
+            CountryAnalysisService countryService = new CountryAnalysisService(countryReader, new PopulationDensityCalculator());
 
-        String countryWithHighestDensity = countryService.findCountryWithHighestPopulationDensity(COUNTRIES_CSV);
-        System.out.printf("Country with highest population density: %s%n", countryWithHighestDensity);
+            String countryWithHighestDensity = countryService.findCountryWithHighestPopulationDensity(COUNTRIES_CSV);
+            System.out.printf("Country with highest population density: %s%n", countryWithHighestDensity);
+        } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
     }
 }

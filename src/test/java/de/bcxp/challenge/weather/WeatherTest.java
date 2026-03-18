@@ -49,7 +49,7 @@ class WeatherTest {
     }
 
     @Test
-    void shouldFindDayWithSmallestTemperatureSpread() throws Exception {
+    void shouldFindDayWithSmallestTemperatureSpread() {
         WeatherAnalysisService service = new WeatherAnalysisService(
                 new CsvFileReader<>(',', new WeatherRowMapper()),
                 new TemperatureSpreadCalculator());

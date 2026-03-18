@@ -16,15 +16,21 @@ public class CountryRowMapper implements RowMapper<CountryRecord> {
 
     @Override
     public CountryRecord map(String[] header, String[] row) {
-        int nameIndex = findColumnIndex(header, COLUMN_NAME);
-        int populationIndex = findColumnIndex(header, COLUMN_POPULATION);
-        int areaIndex = findColumnIndex(header, COLUMN_AREA);
+        try {
+            int nameIndex = findColumnIndex(header, COLUMN_NAME);
+            int populationIndex = findColumnIndex(header, COLUMN_POPULATION);
+            int areaIndex = findColumnIndex(header, COLUMN_AREA);
 
-        String name = row[nameIndex].trim();
-        long population = parsePopulation(row[populationIndex].trim());
-        double area = Double.parseDouble(row[areaIndex].trim());
+            String name = row[nameIndex].trim();
+            long population = parsePopulation(row[populationIndex].trim());
+            double area = Double.parseDouble(row[areaIndex].trim());
 
-        return new CountryRecord(name, population, area);
+            return new CountryRecord(name, population, area);
+        } catch (RowMappingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RowMappingException("Failed to map country row", e);
+        }
     }
 
     private int findColumnIndex(String[] header, String columnName) {
@@ -33,7 +39,7 @@ public class CountryRowMapper implements RowMapper<CountryRecord> {
                 return i;
             }
         }
-        return -1;
+        throw new RowMappingException("Required column not found: " + columnName);
     }
 
     /**

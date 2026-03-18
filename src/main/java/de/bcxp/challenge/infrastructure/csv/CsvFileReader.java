@@ -3,11 +3,10 @@ package de.bcxp.challenge.infrastructure.csv;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvException;
-import de.bcxp.challenge.infrastructure.mapper.RowMapper;
+import de.bcxp.challenge.infrastructure.DataReadException;
 import de.bcxp.challenge.infrastructure.DataReader;
+import de.bcxp.challenge.infrastructure.mapper.RowMapper;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -33,18 +32,31 @@ public class CsvFileReader<T> implements DataReader<T> {
     }
 
     @Override
-    public List<T> read(String resourcePath) throws IOException, CsvException {
-        try (InputStream inputStream = getClass().getResourceAsStream(resourcePath);
-             CSVReader csvReader = buildReader(inputStream)) {
-
-            List<String[]> allRows = csvReader.readAll();
-            String[] header = allRows.get(0);
-
-            List<T> records = new ArrayList<>();
-            for (int i = 1; i < allRows.size(); i++) {
-                records.add(mapper.map(header, allRows.get(i)));
+    public List<T> read(String resourcePath) {
+        try (InputStream inputStream = getClass().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new DataReadException("Resource not found: " + resourcePath);
             }
-            return records;
+
+            try (CSVReader csvReader = buildReader(inputStream)) {
+                List<String[]> allRows = csvReader.readAll();
+
+                if (allRows.isEmpty()) {
+                    throw new DataReadException("CSV file is empty: " + resourcePath);
+                }
+
+                String[] header = allRows.get(0);
+                List<T> records = new ArrayList<>();
+
+                for (int i = 1; i < allRows.size(); i++) {
+                    records.add(mapper.map(header, allRows.get(i)));
+                }
+                return records;
+            }
+        } catch (DataReadException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DataReadException("Failed to read CSV resource: " + resourcePath, e);
         }
     }
 

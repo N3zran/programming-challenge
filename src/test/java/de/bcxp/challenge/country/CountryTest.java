@@ -41,7 +41,7 @@ class CountryTest {
     }
 
     @Test
-    void shouldFindCountryWithHighestPopulationDensity() throws Exception {
+    void shouldFindCountryWithHighestPopulationDensity() {
         CountryAnalysisService service = new CountryAnalysisService(
                 new CsvFileReader<>(';', new CountryRowMapper()),
                 new PopulationDensityCalculator());

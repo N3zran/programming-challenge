@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InfrastructureTest {
 
     @Test
-    void shouldReadWeatherCsv() throws Exception {
+    void shouldReadWeatherCsv() {
         CsvFileReader<WeatherRecord> reader = new CsvFileReader<>(',', new WeatherRowMapper());
 
         List<WeatherRecord> records = reader.read("/de/bcxp/challenge/weather.csv");

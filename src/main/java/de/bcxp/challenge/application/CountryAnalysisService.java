@@ -24,8 +24,9 @@ public class CountryAnalysisService {
      *
      * @param resourcePath the path to the country data source
      * @return the country name
+     * @throws de.bcxp.challenge.infrastructure.DataReadException if the data source cannot be read
      */
-    public String findCountryWithHighestPopulationDensity(String resourcePath) throws Exception {
+    public String findCountryWithHighestPopulationDensity(String resourcePath) {
         List<CountryRecord> records = reader.read(resourcePath);
         return calculator.findCountryWithHighestDensity(records);
     }

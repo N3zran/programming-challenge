@@ -14,6 +14,7 @@ public interface DataReader<T> {
      *
      * @param resourcePath the path or identifier of the data source
      * @return a list of parsed records, never null
+     * @throws DataReadException if the source cannot be read or parsed
      */
-    List<T> read(String resourcePath) throws Exception;
+    List<T> read(String resourcePath);
 }

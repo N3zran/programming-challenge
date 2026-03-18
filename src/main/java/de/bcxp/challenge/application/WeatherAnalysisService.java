@@ -24,8 +24,9 @@ public class WeatherAnalysisService {
      *
      * @param resourcePath the path to the weather data source
      * @return the day number as a String
+     * @throws de.bcxp.challenge.infrastructure.DataReadException if the data source cannot be read
      */
-    public String findDayWithSmallestTemperatureSpread(String resourcePath) throws Exception {
+    public String findDayWithSmallestTemperatureSpread(String resourcePath) {
         List<WeatherRecord> records = reader.read(resourcePath);
         return calculator.findDayWithSmallestSpread(records);
     }
