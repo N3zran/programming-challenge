@@ -16,4 +16,9 @@ public class ExtremumSelector {
                 .orElseThrow();
     }
 
+    public static <T> T findMax(List<T> records, ToDoubleFunction<T> metric) {
+        return records.stream()
+                .max(Comparator.comparingDouble(metric))
+                .orElseThrow();
+    }
 }
