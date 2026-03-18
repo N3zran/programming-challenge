@@ -1,23 +1,30 @@
 package de.bcxp.challenge;
 
-/**
- * The entry class for your solution. This class is only aimed as starting point and not intended as baseline for your software
- * design. Read: create your own classes and packages as appropriate.
- */
+import de.bcxp.challenge.application.WeatherAnalysisService;
+import de.bcxp.challenge.domain.model.WeatherRecord;
+import de.bcxp.challenge.domain.service.TemperatureSpreadCalculator;
+import de.bcxp.challenge.infrastructure.csv.CsvFileReader;
+import de.bcxp.challenge.infrastructure.mapper.WeatherRowMapper;
+import de.bcxp.challenge.infrastructure.DataReader;
+
+
 public final class App {
 
+    private static final String WEATHER_CSV = "/de/bcxp/challenge/weather.csv";
+
     /**
-     * This is the main entry method of your program.
-     * @param args The CLI arguments passed
+     * Main entry method of the program.
+     *
+     * @param args the CLI arguments passed
      */
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
 
-        // Your preparation code …
+        // --- Weather analysis ---
+        DataReader<WeatherRecord> weatherReader = new CsvFileReader<>(',', new WeatherRowMapper());
+        WeatherAnalysisService weatherService = new WeatherAnalysisService(weatherReader, new TemperatureSpreadCalculator());
 
-        String dayWithSmallestTempSpread = "Someday";     // Your day analysis function call …
+        String dayWithSmallestTempSpread = weatherService.findDayWithSmallestTemperatureSpread(WEATHER_CSV);
         System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
 
-        String countryWithHighestPopulationDensity = "Some country"; // Your population density analysis function call …
-        System.out.printf("Country with highest population density: %s%n", countryWithHighestPopulationDensity);
     }
 }
